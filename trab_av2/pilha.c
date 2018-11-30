@@ -155,45 +155,23 @@ int trem_maior(Pilha* trem)
 
 //PATIO
 
-//retorna x patios vazios; x: quantidade de patios
-Pilha** patio_cria(int x)
+//retorna x patios de tamanho m
+Pilha** patios_cria_aloca(int *x, int *m)
 {
-    Pilha** patios = (Pilha**)malloc(x*sizeof(Pilha*));
-    return patios;
-}
-
-//x: quatidade de patios; m: tamanho do patio
-void patio_aloca(Pilha** patios, int x, int m)
-{
-    int i;
-    for(i=0; i<x; i++)
-    {
-        trem_imprime(patios[i]);
-        patios[i] = trem_cria();
-        trem_aloca(patios[i], m);
-
-    }
-}
-
-//Retorna patio realocado; x quantidade de patios existentes
-Pilha** patio_adiciona(Pilha** patios, int *x, int m)
-{
-    int y = ++(*x), i;
+    printf("\nDigite quantos patios tem: ");
+    scanf("%d", x);
+    printf("Digite o tamanho de cada patio: ");
+    scanf("%d", m);
     Pilha** novo = (Pilha**)malloc((*x)*sizeof(Pilha*));
-
-    for(i=0; i<(*x)-2; i++)
+    int i;
+    for(i=0;i<(*x);i++)
     {
         novo[i] = trem_cria();
-        trem_aloca(novo[i], m);
-        novo[i]->n = patios[i] ->n;
-        novo[i]->vet = patios[i]->vet;
-        free(patios[i]);
+        trem_aloca(novo[i], *m);
     }
-
-    novo[*x-1] = trem_cria();
-    trem_aloca(novo[*x-1], m);
     return novo;
 }
+
 
 //m: tamanho do patio
 int patio_cheio(Pilha* patio, int m)
@@ -205,10 +183,10 @@ int patio_cheio(Pilha* patio, int m)
 
 
 //retorna primeiro patio com espaco disponivel; X: qtd de patios
-Pilha* patio_disponivel(Pilha** patios, int x, int m)
+Pilha* patio_disponivel(Pilha** patios, int *x, int m)
 {
     int i;
-    for(i=0; i<x; i++)
+    for(i=0; i<*x; i++)
     {
         if( !patio_cheio(patios[i], m) )
         {
@@ -216,10 +194,37 @@ Pilha* patio_disponivel(Pilha** patios, int x, int m)
         }
     }
     printf("\nNenhum patio disponivel, criando mais um... \n");
-    Pilha** novo;
-    novo = patio_adiciona(patios, &x, m);
-    system("cls");
-    return novo[x-1];
+    x[0]++;
+    *patios = (Pilha**)realloc(*patios,(*x)*sizeof(Pilha*));
+    patios[i]=trem_cria();
+    trem_aloca(patios[i], m);
+    return patio_disponivel(patios, x, m);
+
+}
+
+//retorna o segundo patio disponivel, k indice do primeiro disponivel, x: qtd de patios, m: tam dos patios
+Pilha* patio_2_disponivel(Pilha** patios, int k, int *x, int m)
+{
+    int i;
+    k++;
+    if( k == *x  )
+    {
+        printf("\nNenhum patio disponivel, criando mais um... \n");
+        x[0]++;
+        *patios = (Pilha**)realloc(*patios,(*x)*sizeof(Pilha*));
+        patios[k]=trem_cria();
+        trem_aloca(patios[k], m);
+        return patios[k];
+    } else
+    {
+        for(i=k;i<*x;i++)
+        {
+            if(!patio_cheio(patios[i], m))
+            {
+                return patios[i];
+            }
+        }
+    }
 }
 
 //retorna o topo do patio
@@ -309,70 +314,75 @@ void patio_p_fim(Pilha* patio, Pilha* fim)
 }
 
 //retira todos vagoes do trem ate ficar vazio
-void trem_retira(Pilha* trem, Pilha** patios, int x, int m, Pilha* fim)
+void trem_retira(Pilha* trem, Pilha** patios, int *x, int m, Pilha* fim)
 {
     while(!trem_vazio(trem))
     {
-        imprime_tudo(trem, patios, x, fim);
+        imprime_tudo(trem, patios, *x, fim);
         if(trem->vet[trem->n-1] == trem_maior(trem))
         {
-            if( trem_maior(trem) >   patio_maior(patio_max(patios, x, m))  )
+            if( trem_maior(trem) >   patio_maior(patio_max(patios, *x, m))  )
             {
                 trem_p_fim(trem, fim);
-                //imprime_tudo(trem, patios, x, fim);
             }
             else
                 {
                     pilha_push( patio_disponivel(patios, x, m), pilha_pop(trem)  );
-                    //imprime_tudo(trem, patios, x, fim);
                 }
         }
 
         else
         {
             pilha_push( patio_disponivel(patios, x, m), pilha_pop(trem)  );
-            //imprime_tudo(trem, patios, x, fim);
         }
         system("pause");
     }
-    imprime_tudo(trem, patios, x, fim);
+    imprime_tudo(trem, patios, *x, fim);
     puts("Trem vazio.");
+    system("pause");
 }
 
 
+
+
 //funcao para retirar os elementos do patio e os posiciona no fim
-void patio_retira(Pilha** patios, int x, int m, Pilha* fim)
+void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
 {
-    int i;
-    while(!patios_vazios(patios, x))
+    int i, j;
+    while(!patios_vazios(patios, *x))
     {
-            for(i=0; i<x; i++)
+        for(i=0;i<*x;i++)
         {
-            imprime_quase_tudo(patios, x, fim);
-        if ( patio_max(patios, x, m) == patios[i]    )
-        {
-            if ( patio_topo(patios[i]) == patio_maior(patios[i]) )
+            imprime_quase_tudo(patios, *x, fim);
+            if( patios[i] == patio_max(patios, *x, m))
+            {
+                if(patio_topo(patios[i]) == patio_maior(patios[i]))
                 {
                     patio_p_fim(patios[i], fim);
                 }
                 else
-                    {
-                        if( patio_disponivel(patios, x, m) != patios[i])
-                        {
-                            pilha_push( patio_disponivel(patios, x, m), pilha_pop(patios[i]) );
-                        }
-                        else
-                        {
-                            pilha_push( (patio_disponivel(patios, x, m) + 1), pilha_pop(patios[i]) );
-                        }
-                    }
+                {
+                    while(patio_topo(patios[i]) != patio_maior(patios[i]))
+                          {
+                              if(patio_disponivel(patios, x, m) != patios[i])
+                                 {
+                                     pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
+                                 }
+                                 else
+                                    {
+                                        pilha_push(patio_2_disponivel(patios, i, x, m), pilha_pop(patios[i]));
+                                    }
+                          }
+                          patio_p_fim(patios[i], fim);
+                }
+            }
         }
-        }
-
-
+        system("pause");
     }
-
+    puts("Patios vazios.");
+    system("pause");
 }
+
 
 
 

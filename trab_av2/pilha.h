@@ -48,21 +48,19 @@ int trem_maior(Pilha* trem);
 
 //PATIO
 
-//retorna x patios vazios; x: quantidade de patios
-Pilha** patio_cria(int x);
-//x: quatidade de patios; m: tamanho do patio
-void patio_aloca(Pilha** patios, int x, int m);
-//x quantidade de patios existentes
-Pilha** patio_adiciona(Pilha** patios, int *x, int m);
-//m: tamanho do patio
+//retorna x patios de tamanho m
+Pilha** patios_cria_aloca(int *x, int *m);
+//retorna 1 se o patio estiver cheio, m: tamanho do patio
 int patio_cheio(Pilha* patio, int m);
 //retorna primeiro patio com espaco disponivel; X: qtd de patios; M: tam dos patios
-Pilha* patio_disponivel(Pilha** patios, int x, int m);
+Pilha* patio_disponivel(Pilha** patios, int *x, int m);
+//retorna o segundo patio disponivel, k indice do primeiro disponivel, x: qtd de patios, m: tam dos patios
+Pilha* patio_2_disponivel(Pilha** patios, int k, int *x, int m);
 //retorna o topo do patio
 int patio_topo(Pilha* patios);
 //retorna elemento abaixo do topo do patio
 int patio_abaixo(Pilha* patio);
-//retorna maior valor nos patios
+//retorna maior valor naquele patios
 int patio_maior(Pilha* patios);
 //retorna patio que tiver o maior valor entre os patios
 Pilha* patio_max(Pilha** patios, int x, int m);
@@ -75,8 +73,13 @@ void patios_imprime(Pilha** patios, int x);
 //TREM PARA FIM
 void patio_p_fim(Pilha* patio, Pilha* fim);
 
+//PATIO PARA FIM
+void patio_p_fim(Pilha* patio, Pilha* fim);
 
 //retira todos vagoes do trem ate ficar vazio
-void trem_retira(Pilha* trem, Pilha** patios, int x, int m, Pilha* fim);
+void trem_retira(Pilha* trem, Pilha** patios, int *x, int m, Pilha* fim);
+
+//funcao para retirar os elementos do patio e os posiciona no fim
+void patio_retira(Pilha** patios, int *x, int m, Pilha* fim);
 
 #endif // pilha_h
