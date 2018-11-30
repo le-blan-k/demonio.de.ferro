@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1542618883 source:c:\users\blank\documents\uezo\material\4º período\estrutura de dados i\codeblocks\trab_av2\pilha.c
+	"pilha.h"
+	<stdio.h>
+	<stdlib.h>
+
+1543053613 c:\users\blank\documents\uezo\material\4º período\estrutura de dados i\codeblocks\trab_av2\pilha.h
+	<stdio.h>
+	<stdlib.h>
+
+1543053613 source:c:\users\blank\documents\uezo\material\4º período\estrutura de dados i\codeblocks\trab_av2\main.c
+	"pilha.h"
+	<stdio.h>
+	<stdlib.h>
+
+1543177064 source:c:\users\blank\desktop\trab_av2\main.c
+	"pilha.h"
+	<stdio.h>
+	<stdlib.h>
+
+1543118938 c:\users\blank\desktop\trab_av2\pilha.h
+	<stdio.h>
+	<stdlib.h>
+
+1543177064 source:c:\users\blank\desktop\trab_av2\pilha.c
+	"pilha.h"
+	<stdio.h>
+	<stdlib.h>
+
