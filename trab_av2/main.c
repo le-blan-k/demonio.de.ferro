@@ -26,10 +26,7 @@ void main(void)
 
     trem_retira(trem, patios, &x, m, saida);
 
-    patios_imprime(patios, x);
-    imprime_quase_tudo(patios, x, saida);
-
-   patio_retira(patios, &x, m, saida);
+    patio_retira(patios, &x, m, saida);
 
 
 }

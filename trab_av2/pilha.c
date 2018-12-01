@@ -206,26 +206,17 @@ Pilha* patio_disponivel(Pilha** patios, int *x, int m)
 Pilha* patio_2_disponivel(Pilha** patios, int k, int *x, int m)
 {
     int i;
-    k++;
-    if( k == *x  )
-    {
-        printf("\nNenhum patio disponivel, criando mais um... \n");
-        x[0]++;
-        *patios = (Pilha**)realloc(*patios,(*x)*sizeof(Pilha*));
-        patios[k]=trem_cria();
-        trem_aloca(patios[k], m);
-        return patios[k];
-    } else
-    {
-        for(i=k;i<*x;i++)
-        {
-            if(!patio_cheio(patios[i], m))
-            {
-                return patios[i];
-            }
-        }
-    }
+    for(i=k;i<*x;i++)
+       {
+           if(!patio_cheio(patios[i], m))
+           {
+               return patios[i];
+           }
+       }
 }
+
+
+
 
 //retorna o topo do patio
 int patio_topo(Pilha* patio)
@@ -276,13 +267,16 @@ Pilha* patio_max(Pilha** patios, int x, int m)
 //retorna se os patios estao vazios
 int patios_vazios(Pilha** patios, int x)
 {
-    int i, resultado;
+    int i, resultado = 1;
     //resultado vai dizer se todos os patios estao vazios
     for(i=0; i<x; i++)
     {
         resultado = pilha_vazia(patios[i]);
+        if(resultado == 0)
+        {
+            return resultado;
+        }
     }
-    return resultado;
 }
 
 //imprime todos os patios
@@ -355,8 +349,10 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
         {
             imprime_quase_tudo(patios, *x, fim);
             if( patios[i] == patio_max(patios, *x, m))
+                //se o patio testado eh o patio q contem o maior valor:
             {
                 if(patio_topo(patios[i]) == patio_maior(patios[i]))
+                //se o topo do patio eh o maior valor nele
                 {
                     patio_p_fim(patios[i], fim);
                 }
@@ -365,15 +361,36 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                     while(patio_topo(patios[i]) != patio_maior(patios[i]))
                           {
                               if(patio_disponivel(patios, x, m) != patios[i])
+                              //se o primeiro patio disponivel nao for o patio testado
                                  {
                                      pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
+                                     imprime_quase_tudo(patios, *x, fim);
                                  }
                                  else
                                     {
-                                        pilha_push(patio_2_disponivel(patios, i, x, m), pilha_pop(patios[i]));
+                                        if(i+1==*x)
+                                        //se chegou ao ultimo indice dos patios
+                                        {
+                                            printf("\nNenhum patio disponivel, criando mais um... \n");
+                                            *x++;
+                                            *patios = (Pilha**)realloc(*patios, (*x)*sizeof(Pilha*));
+                                            patios[i+1]=trem_cria();
+                                            trem_aloca(patios[i+1], m);
+                                            imprime_quase_tudo(patios, *x, fim);
+                                            pilha_push(patios[i+1],pilha_pop(patios[i]));
+                                            imprime_quase_tudo(patios, *x, fim);
+
+                                        } else
+                                        {
+                                            pilha_push(patio_2_disponivel(patios, i, x, m), pilha_pop(patios[i]));
+                                            imprime_quase_tudo(patios, *x, fim);
+
+                                        }
+
                                     }
                           }
                           patio_p_fim(patios[i], fim);
+                          imprime_quase_tudo(patios, *x, fim);
                 }
             }
         }
