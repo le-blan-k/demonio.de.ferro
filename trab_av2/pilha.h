@@ -58,8 +58,6 @@ Pilha* patio_disponivel(Pilha** patios, int *x, int m);
 Pilha* patio_2_disponivel(Pilha** patios, int k, int *x, int m);
 //retorna o topo do patio
 int patio_topo(Pilha* patios);
-//retorna elemento abaixo do topo do patio
-int patio_abaixo(Pilha* patio);
 //retorna maior valor naquele patios
 int patio_maior(Pilha* patios);
 //retorna patio que tiver o maior valor entre os patios

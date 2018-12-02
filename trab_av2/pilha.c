@@ -17,10 +17,15 @@ void pilha_push(Pilha* p, int v)
     p->n++;
 }
 
-int pilha_pop(Pilha*p){
-    int val = p->vet[(p->n)-1];
-    p->vet[(p->n)-1] = NULL;
-    p->n--;
+int pilha_pop(Pilha*p)
+{
+    int val = NULL;
+    if(p->n > 0 )
+    {
+        p->n--;
+        val = p->vet[p->n];
+        p->vet[p->n] = NULL;
+    }
     return val;
 }
 
@@ -221,14 +226,15 @@ Pilha* patio_2_disponivel(Pilha** patios, int k, int *x, int m)
 //retorna o topo do patio
 int patio_topo(Pilha* patio)
 {
-    return patio->vet[patio->n-1];
+    if(patio->n <= 0)
+    {
+        return NULL;
+    } else
+    {
+        return patio->vet[patio->n-1];
+    }
 }
 
-//retorna elemento abaixo do topo do patio
-int patio_abaixo(Pilha* patio)
-{
-    return patio->vet[patio->n-2];
-}
 
 //retorna maior valor naquele patio
 int patio_maior(Pilha* patio)
@@ -256,7 +262,7 @@ Pilha* patio_max(Pilha** patios, int x, int m)
         {
             return maior;
         }
-        if( patio_maior(patios[i]) > patio_maior(patios[i+1])  )
+        else if( patio_maior(patios[i]) > patio_maior(patios[i+1])  )
         {
             maior = patios[i];
         }
@@ -337,7 +343,7 @@ void trem_retira(Pilha* trem, Pilha** patios, int *x, int m, Pilha* fim)
 }
 
 
-
+/*
 
 //funcao para retirar os elementos do patio e os posiciona no fim
 void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
@@ -351,7 +357,7 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
             if( patios[i] == patio_max(patios, *x, m))
                 //se o patio testado eh o patio q contem o maior valor:
             {
-                if(patio_topo(patios[i]) == patio_maior(patios[i]))
+                if(patio_topo(patios[i]) == patio_maior(patios[i]) && !pilha_vazia(patios[i]) )
                 //se o topo do patio eh o maior valor nele
                 {
                     patio_p_fim(patios[i], fim);
@@ -360,7 +366,7 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                 {
                     while(patio_topo(patios[i]) != patio_maior(patios[i]))
                           {
-                              if(patio_disponivel(patios, x, m) != patios[i])
+                              if(patio_disponivel(patios, x, m) != patios[i] && !pilha_vazia(patios[i]) )
                               //se o primeiro patio disponivel nao for o patio testado
                                  {
                                      pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
@@ -368,7 +374,7 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                                  }
                                  else
                                     {
-                                        if(i+1==*x)
+                                        if(i+1==*x && !pilha_vazia(patios[i]) )
                                         //se chegou ao ultimo indice dos patios
                                         {
                                             printf("\nNenhum patio disponivel, criando mais um... \n");
@@ -400,6 +406,54 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
     system("pause");
 }
 
+*/
 
+//funcao para retirar os elementos do patio e os posiciona no fim
+void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
+{
+    int i, j;
+    while(!patios_vazios(patios, *x))
+    {
+        imprime_quase_tudo(patios, *x, fim);
+        for(i=0; i<*x; i++)
+        {
+            if(patios[i] == patio_max(patios, *x, m))
+            {
+                if(patio_topo(patios[i]) == patio_maior(patios[i]))
+                {
+                    pilha_push(fim, pilha_pop(patios[i]));
+                } else
+                {
+                    while( patio_topo(patios[i]) != patio_maior(patios[i]) )
+                    {
+                        if(patio_disponivel(patios, x, m) != patios[i])
+                        {
+                            pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
+                        } else
+                        {
+                            if(i+1 < *x)
+                            {
+                                for(j=i+1;j<*x;j++)
+                                {
+                                    if(!patio_cheio(patios[j], m))
+                                        break;
+
+                                }
+
+                                pilha_push(patios[j], pilha_pop(patios[i]));
+                            }
+                            //criar tratamento para quando estiverem todos cheios (realloc)
+                            //pilha_push(patios[j], pilha_pop(patios[i]));
+
+                        }
+                    }
+                    pilha_push(fim, pilha_pop(patios[i]));
+                }
+            }
+        }
+        system("pause");
+    }
+    imprime_quase_tudo(patios, *x, fim);
+}
 
 

@@ -27,6 +27,9 @@ void main(void)
     trem_retira(trem, patios, &x, m, saida);
 
     patio_retira(patios, &x, m, saida);
+    puts("Fim da execucao.");
+
+    system("pause");
 
 
 }
