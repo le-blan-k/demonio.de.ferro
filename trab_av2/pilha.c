@@ -453,6 +453,7 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
         }
         system("pause");
     }
+    pilha_pop(fim);
     imprime_quase_tudo(patios, *x, fim);
 }
 
