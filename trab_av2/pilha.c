@@ -285,6 +285,21 @@ int patios_vazios(Pilha** patios, int x)
     }
 }
 
+//retorna se os patios estao cheios
+int patios_cheios(Pilha** patios, int x, int m)
+{
+    int res = 0, i;
+    for(i=0;i<x;i++)
+    {
+        if(patio_cheio(patios[i], m))
+            res++;
+    }
+    if(res == x)
+        return 1;
+    else
+        return 0;
+}
+
 //imprime todos os patios
 void patios_imprime(Pilha** patios, int x)
 {
@@ -412,6 +427,8 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
 void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
 {
     int i, j;
+    //Pilha* aux = trem_cria();
+    //trem_aloca(aux, m);
     while(!patios_vazios(patios, *x))
     {
         imprime_quase_tudo(patios, *x, fim);
@@ -426,7 +443,16 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                 {
                     while( patio_topo(patios[i]) != patio_maior(patios[i]) )
                     {
-                        if(patio_disponivel(patios, x, m) != patios[i])
+                        if(patios_cheios(patios, *x, m))
+                        {
+                            printf("Patios cheios, adicionando mais um...");
+                            *patios = (Pilha**)realloc(*patios,(*x+1)*sizeof(Pilha*));
+                            patios[(*x)] = trem_cria();
+                            trem_aloca(patios[(*x)], m);
+                            x[0]++;
+                            imprime_quase_tudo(patios, *x, fim);
+                        }
+                        /*ao*/if(patio_disponivel(patios, x, m) != patios[i])
                         {
                             pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
                         } else
@@ -441,8 +467,16 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                                 }
 
                                 pilha_push(patios[j], pilha_pop(patios[i]));
+                            } else if ( i+1 == *x)
+                            {
+                                //caso todos patios estejam cheios
+                                *x++;
+                                *patios = (Pilha**)realloc(*patios, (*x)*sizeof(Pilha*));
+                                patios[i+1] = trem_cria();
+                                trem_aloca(patios[i+1], m);
+                                pilha_push(patios[i+1], pilha_pop(patios[i]));
                             }
-                            //criar tratamento para quando estiverem todos cheios (realloc)
+
                             //pilha_push(patios[j], pilha_pop(patios[i]));
 
                         }
