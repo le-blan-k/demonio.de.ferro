@@ -163,9 +163,9 @@ int trem_maior(Pilha* trem)
 //retorna x patios de tamanho m
 Pilha** patios_cria_aloca(int *x, int *m)
 {
-    printf("\nDigite quantos patios tem: ");
+    printf("\nDigite quantoas filas tem: ");
     scanf("%d", x);
-    printf("Digite o tamanho de cada patio: ");
+    printf("Digite o tamanho de cada fila: ");
     scanf("%d", m);
     Pilha** novo = (Pilha**)malloc((*x)*sizeof(Pilha*));
     int i;
@@ -198,7 +198,7 @@ Pilha* patio_disponivel(Pilha** patios, int *x, int m)
             return patios[i];
         }
     }
-    printf("\nNenhum patio disponivel, criando mais um... \n");
+    printf("\nNenhuma fila disponivel, criando mais uma... \n");
     x[0]++;
     *patios = (Pilha**)realloc(*patios,(*x)*sizeof(Pilha*));
     patios[i]=trem_cria();
@@ -207,21 +207,18 @@ Pilha* patio_disponivel(Pilha** patios, int *x, int m)
 
 }
 
-//retorna o segundo patio disponivel, k indice do primeiro disponivel, x: qtd de patios, m: tam dos patios
-Pilha* patio_2_disponivel(Pilha** patios, int k, int *x, int m)
+//realoca os patios
+void patios_realoca(Pilha** patios, int *x, int m)
 {
-    int i;
-    for(i=k;i<*x;i++)
-       {
-           if(!patio_cheio(patios[i], m))
-           {
-               return patios[i];
-           }
-       }
+    printf("\nAdicionando fila...");
+    int i = *x;
+    x[0]++;
+    *patios = (Pilha**)realloc(*patios, *x*sizeof(Pilha*));
+    patios[i] = (Pilha*)malloc(*x*sizeof(Pilha));
+    patios[i]->n = 0;
+    patios[i]->vet = (int*)malloc(m*sizeof(int));
+    patios[i]->vet = NULL;
 }
-
-
-
 
 //retorna o topo do patio
 int patio_topo(Pilha* patio)
@@ -304,13 +301,13 @@ int patios_cheios(Pilha** patios, int x, int m)
 void patios_imprime(Pilha** patios, int x)
 {
     int i, maior;
-    printf("\nPatios: ");
+    printf("\nFilas de espera: ");
     for(i=0; i< x; i++)
     {
-        printf("\n\tPatio %d: ", i);
+        printf("\n\tFila %d: ", i);
         trem_imprime(patios[i]);
         maior = patio_maior(patios[i]);
-        printf("Maior valor no patio %d: %d\n", i, maior);
+        printf("Maior valor na fila %d: %d\n", i, maior);
     }
 }
 
@@ -357,76 +354,11 @@ void trem_retira(Pilha* trem, Pilha** patios, int *x, int m, Pilha* fim)
     system("pause");
 }
 
-
-/*
-
 //funcao para retirar os elementos do patio e os posiciona no fim
 void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
 {
     int i, j;
-    while(!patios_vazios(patios, *x))
-    {
-        for(i=0;i<*x;i++)
-        {
-            imprime_quase_tudo(patios, *x, fim);
-            if( patios[i] == patio_max(patios, *x, m))
-                //se o patio testado eh o patio q contem o maior valor:
-            {
-                if(patio_topo(patios[i]) == patio_maior(patios[i]) && !pilha_vazia(patios[i]) )
-                //se o topo do patio eh o maior valor nele
-                {
-                    patio_p_fim(patios[i], fim);
-                }
-                else
-                {
-                    while(patio_topo(patios[i]) != patio_maior(patios[i]))
-                          {
-                              if(patio_disponivel(patios, x, m) != patios[i] && !pilha_vazia(patios[i]) )
-                              //se o primeiro patio disponivel nao for o patio testado
-                                 {
-                                     pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
-                                     imprime_quase_tudo(patios, *x, fim);
-                                 }
-                                 else
-                                    {
-                                        if(i+1==*x && !pilha_vazia(patios[i]) )
-                                        //se chegou ao ultimo indice dos patios
-                                        {
-                                            printf("\nNenhum patio disponivel, criando mais um... \n");
-                                            *x++;
-                                            *patios = (Pilha**)realloc(*patios, (*x)*sizeof(Pilha*));
-                                            patios[i+1]=trem_cria();
-                                            trem_aloca(patios[i+1], m);
-                                            imprime_quase_tudo(patios, *x, fim);
-                                            pilha_push(patios[i+1],pilha_pop(patios[i]));
-                                            imprime_quase_tudo(patios, *x, fim);
-
-                                        } else
-                                        {
-                                            pilha_push(patio_2_disponivel(patios, i, x, m), pilha_pop(patios[i]));
-                                            imprime_quase_tudo(patios, *x, fim);
-
-                                        }
-
-                                    }
-                          }
-                          patio_p_fim(patios[i], fim);
-                          imprime_quase_tudo(patios, *x, fim);
-                }
-            }
-        }
-        system("pause");
-    }
-    puts("Patios vazios.");
-    system("pause");
-}
-
-*/
-
-//funcao para retirar os elementos do patio e os posiciona no fim
-void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
-{
-    int i, j;
+    int a = (*x)+1;
     //Pilha* aux = trem_cria();
     //trem_aloca(aux, m);
     while(!patios_vazios(patios, *x))
@@ -446,10 +378,7 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                         if(patios_cheios(patios, *x, m))
                         {
                             printf("Patios cheios, adicionando mais um...");
-                            *patios = (Pilha**)realloc(*patios,(*x+1)*sizeof(Pilha*));
-                            patios[(*x)] = trem_cria();
-                            trem_aloca(patios[(*x)], m);
-                            x[0]++;
+                            patios_realoca(patios, x, m);
                             imprime_quase_tudo(patios, *x, fim);
                         }
                         /*ao*/if(patio_disponivel(patios, x, m) != patios[i])

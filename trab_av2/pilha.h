@@ -54,8 +54,10 @@ Pilha** patios_cria_aloca(int *x, int *m);
 int patio_cheio(Pilha* patio, int m);
 //retorna primeiro patio com espaco disponivel; X: qtd de patios; M: tam dos patios
 Pilha* patio_disponivel(Pilha** patios, int *x, int m);
-//retorna o segundo patio disponivel, k indice do primeiro disponivel, x: qtd de patios, m: tam dos patios
-Pilha* patio_2_disponivel(Pilha** patios, int k, int *x, int m);
+
+//realoca os patios
+void patios_realoca(Pilha** patios, int *x, int m);
+
 //retorna o topo do patio
 int patio_topo(Pilha* patios);
 //retorna maior valor naquele patios
