@@ -29,6 +29,7 @@ void main(void)
     patio_retira(patios, &x, m, saida);
     puts("Fim da execucao.");
 
+    imprime_tudo(trem, patios, x, saida);
     system("pause");
 
 
