@@ -24,6 +24,7 @@ int pilha_vazia(Pilha* p);
 
 void imprime_tudo(Pilha* trem, Pilha** patios, int x, Pilha* fim);
 void imprime_quase_tudo(Pilha** patios, int x, Pilha* fim);
+void fim_imprime(Pilha* trem);
 
 //TREM
 
@@ -54,10 +55,8 @@ Pilha** patios_cria_aloca(int *x, int *m);
 int patio_cheio(Pilha* patio, int m);
 //retorna primeiro patio com espaco disponivel; X: qtd de patios; M: tam dos patios
 Pilha* patio_disponivel(Pilha** patios, int *x, int m);
-
 //realoca os patios
 Pilha** patios_realoca(Pilha** patios, int *x, int m);
-
 //retorna o topo do patio
 int patio_topo(Pilha* patios);
 //retorna maior valor naquele patios
