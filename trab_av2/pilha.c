@@ -208,7 +208,7 @@ Pilha* patio_disponivel(Pilha** patios, int *x, int m)
 }
 
 //realoca os patios
-void patios_realoca(Pilha** patios, int *x, int m)
+Pilha** patios_realoca(Pilha** patios, int *x, int m)
 {
     printf("\nAdicionando fila...");
     int i = *x;
@@ -217,6 +217,7 @@ void patios_realoca(Pilha** patios, int *x, int m)
     patios[i] = (Pilha*)malloc(*x*sizeof(Pilha));
     patios[i]->n = 0;
     patios[i]->vet = (int*)malloc(m*sizeof(int));
+    return patios;
 }
 
 //retorna o topo do patio
@@ -353,88 +354,18 @@ void trem_retira(Pilha* trem, Pilha** patios, int *x, int m, Pilha* fim)
     system("pause");
 }
 
-/*
-//funcao para retirar os elementos do patio e os posiciona no fim
-void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
-{
-    int i, j;
-    int a = (*x)+1;
-    //Pilha* aux = trem_cria();
-    //trem_aloca(aux, m);
-    while(!patios_vazios(patios, *x))
-    {
-        imprime_quase_tudo(patios, *x, fim);
-        for(i=0; i<*x; i++)
-        {
-            if(patios[i] == patio_max(patios, *x, m))
-            {
-                if(patio_topo(patios[i]) == patio_maior(patios[i]))
-                {
-                    pilha_push(fim, pilha_pop(patios[i]));
-                } else
-                {
-                    while( patio_topo(patios[i]) != patio_maior(patios[i]) )
-                    {
-                        if(patios_cheios(patios, *x, m))
-                        {
-                            printf("Patios cheios, adicionando mais um...");
-                            patios_realoca(patios, x, m);
-                            imprime_quase_tudo(patios, *x, fim);
-                        }
-                        if(patio_disponivel(patios, x, m) != patios[i])
-                        {
-                            pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
-                        } else
-                        {
-                            if(i+1 < *x)
-                            {
-                                for(j=i+1;j<*x;j++)
-                                {
-                                    if(!patio_cheio(patios[j], m))
-                                        break;
-
-                                }
-
-                                pilha_push(patios[j], pilha_pop(patios[i]));
-                            } else if ( i+1 == *x)
-                            {
-                                //caso todos patios estejam cheios
-                                *x++;
-                                *patios = (Pilha**)realloc(*patios, (*x)*sizeof(Pilha*));
-                                patios[i+1] = trem_cria();
-                                trem_aloca(patios[i+1], m);
-                                pilha_push(patios[i+1], pilha_pop(patios[i]));
-                            }
-
-                            //pilha_push(patios[j], pilha_pop(patios[i]));
-
-                        }
-                    }
-                    pilha_push(fim, pilha_pop(patios[i]));
-                }
-            }
-        }
-        system("pause");
-    }
-    pilha_pop(fim);
-    imprime_quase_tudo(patios, *x, fim);
-}
-
-*/
-
-
 //funcao para retirar os elementos do patio e os posiciona no fim
 void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
 {
     int i, j;
     int a;
-    //Pilha* aux = trem_cria();
-    //trem_aloca(aux, m);
     while(!patios_vazios(patios, *x))
     {
         imprime_quase_tudo(patios, *x, fim);
         for(i=0; i<*x; i++)
         {
+            imprime_quase_tudo(patios, *x, fim);
+            system("pause");
             a = (*x);
             if(patios[i] == patio_max(patios, *x, m))
             {
@@ -445,10 +376,11 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                 {
                     if(patios_cheios(patios, *x, m))
                     {
-                        patios_realoca(patios, x, m);
-                        printf("Realocado...");
+                        patios = patios_realoca(patios, x, m);
+                        printf(" Realocado...");
                         system("pause");
                         pilha_push(patio_disponivel(patios, x, m), pilha_pop(patios[i]));
+                        i=0;
                         imprime_quase_tudo(patios, *x, fim);
                     } else if (patio_disponivel(patios, x, m) != patios[i])
                     {
@@ -458,11 +390,10 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                             if( !patio_cheio(patios[j], m) )
                             {
                                 pilha_push(patios[j], pilha_pop(patios[i]));
-                                imprime_quase_tudo(patios, *x, fim);
+                                i=0;
                                 break;
                             }
                         }
-                        imprime_quase_tudo(patios, *x, fim);
                     } else if (patio_disponivel(patios, x, m) == patios[i] ) /*caso o primeiro disponivel seja ele mesmo*/
                     {
                         for(j=i+1;j<*x;j++)
@@ -470,7 +401,7 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                             if(!patio_cheio(patios[j], m))
                             {
                                 pilha_push(patios[j], pilha_pop(patios[i]));
-                                imprime_quase_tudo(patios, *x, fim);
+                                i=0;
                                 break;
                             }
                         }
@@ -478,8 +409,6 @@ void patio_retira(Pilha** patios, int *x, int m, Pilha* fim)
                 }
             }
         }
-        system("pause");
     }
-    pilha_pop(fim);
     imprime_quase_tudo(patios, *x, fim);
 }

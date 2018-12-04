@@ -56,7 +56,7 @@ int patio_cheio(Pilha* patio, int m);
 Pilha* patio_disponivel(Pilha** patios, int *x, int m);
 
 //realoca os patios
-void patios_realoca(Pilha** patios, int *x, int m);
+Pilha** patios_realoca(Pilha** patios, int *x, int m);
 
 //retorna o topo do patio
 int patio_topo(Pilha* patios);
